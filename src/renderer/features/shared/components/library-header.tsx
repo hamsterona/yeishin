@@ -38,6 +38,8 @@ interface LibraryHeaderProps {
     children?: ReactNode;
     compact?: boolean;
     containerClassName?: string;
+    /** Always-visible layer drawn over the cover, sized to it (Yabbyville stickers). */
+    imageDecoration?: ReactNode;
     imageOverlay?: ReactNode;
     imagePlaceholderUrl?: null | string;
     imageUrl?: null | string;
@@ -64,6 +66,7 @@ export const LibraryHeader = forwardRef(
             children,
             compact,
             containerClassName,
+            imageDecoration,
             imageOverlay,
             imageUrl,
             item,
@@ -144,6 +147,16 @@ export const LibraryHeader = forwardRef(
             });
         }, [blurExplicitImages, item.explicitStatus, item.imageId, item.type]);
 
+        const withDecoration = (image: ReactNode) =>
+            imageDecoration ? (
+                <div className={styles.imageFrame}>
+                    {image}
+                    {imageDecoration}
+                </div>
+            ) : (
+                image
+            );
+
         const imageSectionSharedProps = {
             onClick: () => {
                 openImage();
@@ -173,21 +186,23 @@ export const LibraryHeader = forwardRef(
                         onFileSelected={(file) => void onImageFileDrop(file)}
                         {...imageSectionSharedProps}
                     >
-                        <ItemImage
-                            blurHash={item.blurHash}
-                            className={styles.image}
-                            containerClassName={styles.image}
-                            dominantColor={item.dominantColor}
-                            enableDebounce={false}
-                            enableViewport={false}
-                            explicitStatus={item.explicitStatus ?? null}
-                            fetchPriority="high"
-                            id={item.imageId}
-                            itemType={item.type as LibraryItem}
-                            src={imageUrl || ''}
-                            thumbHash={item.thumbHash}
-                            type="header"
-                        />
+                        {withDecoration(
+                            <ItemImage
+                                blurHash={item.blurHash}
+                                className={styles.image}
+                                containerClassName={styles.image}
+                                dominantColor={item.dominantColor}
+                                enableDebounce={false}
+                                enableViewport={false}
+                                explicitStatus={item.explicitStatus ?? null}
+                                fetchPriority="high"
+                                id={item.imageId}
+                                itemType={item.type as LibraryItem}
+                                src={imageUrl || ''}
+                                thumbHash={item.thumbHash}
+                                type="header"
+                            />,
+                        )}
                         {imageOverlay && (
                             <div
                                 className={styles.imageOverlay}
@@ -201,21 +216,23 @@ export const LibraryHeader = forwardRef(
                     </DragDropZone>
                 ) : (
                     <div className={styles.imageSection} {...imageSectionSharedProps}>
-                        <ItemImage
-                            blurHash={item.blurHash}
-                            className={styles.image}
-                            containerClassName={styles.image}
-                            dominantColor={item.dominantColor}
-                            enableDebounce={false}
-                            enableViewport={false}
-                            explicitStatus={item.explicitStatus ?? null}
-                            fetchPriority="high"
-                            id={item.imageId}
-                            itemType={item.type as LibraryItem}
-                            src={imageUrl || ''}
-                            thumbHash={item.thumbHash}
-                            type="header"
-                        />
+                        {withDecoration(
+                            <ItemImage
+                                blurHash={item.blurHash}
+                                className={styles.image}
+                                containerClassName={styles.image}
+                                dominantColor={item.dominantColor}
+                                enableDebounce={false}
+                                enableViewport={false}
+                                explicitStatus={item.explicitStatus ?? null}
+                                fetchPriority="high"
+                                id={item.imageId}
+                                itemType={item.type as LibraryItem}
+                                src={imageUrl || ''}
+                                thumbHash={item.thumbHash}
+                                type="header"
+                            />,
+                        )}
                         {imageOverlay && (
                             <div
                                 className={styles.imageOverlay}

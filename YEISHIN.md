@@ -3,9 +3,10 @@
 [Feishin](https://github.com/jeffvli/feishin) with Yabbyville stickers. macOS and Windows.
 Everything Feishin does, plus:
 
-- the Yabbyville stickers on an album show on its page;
+- the Yabbyville stickers on an album sit on its cover where people placed them,
+  with their messages beside the track list;
 - a **Yabby** page in the sidebar lists recently stickered albums;
-- Settings > General > Yabbyville holds the token.
+- Settings > Yabbyville holds the token.
 
 It installs beside stock Feishin (its own app id, settings and updates).
 
@@ -26,7 +27,7 @@ Download the latest release from <https://github.com/hamsterona/yeishin/releases
 
 Then add your Navidrome server as in Feishin, make a token on your Yabbyville
 profile (account > yeishin tokens; admins only for now) and paste it into
-Settings > General > Yabbyville.
+Settings > Yabbyville.
 
 ## How it talks to Yabbyville
 
@@ -86,9 +87,11 @@ lives in new files (`src/main/features/core/yabby/`, `src/preload/yabby.ts`,
 | `src/renderer/router/routes.ts`, `app-router.tsx` | `/yabby` route |
 | `src/renderer/store/settings.store.ts` | Yabby sidebar item (new installs) |
 | `src/renderer/features/sidebar/components/sidebar-icon.tsx` | sticker icon |
-| `src/renderer/features/settings/components/general/general-tab.tsx` | Yabbyville section |
+| `src/renderer/features/settings/components/settings-content.tsx` | Yabbyville tab |
 | `src/renderer/features/settings/components/window/update-settings.tsx` | hide release channel |
-| `src/renderer/features/albums/components/album-detail-content.tsx` | album stickers |
+| `src/renderer/features/albums/components/album-detail-content.tsx` | album sticker messages |
+| `src/renderer/features/albums/components/album-detail-header.tsx` | stickers on the cover |
+| `src/renderer/features/shared/components/library-header.tsx` (+ `.module.css`) | `imageDecoration` slot over the cover |
 | `assets/icons/*` (not `IconTemplate*`), `media/feishin.icon/icon.json` | pink tint of the Feishin icon |
 | `.github/workflows/` | upstream publish/stale workflows removed; `release.yml`, `sync-upstream.yml` added |
 

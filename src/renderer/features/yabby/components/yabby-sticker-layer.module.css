@@ -1,0 +1,16 @@
+.layer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+.sticker {
+    position: absolute;
+    width: calc(100% / 3);
+    height: calc(100% / 3);
+    pointer-events: auto;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+}

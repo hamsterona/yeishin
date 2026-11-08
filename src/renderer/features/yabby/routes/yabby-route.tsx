@@ -7,7 +7,7 @@ import styles from './yabby-route.module.css';
 import { useItemImageUrl } from '/@/renderer/components/item-image/item-image';
 import { LibraryContainer } from '/@/renderer/features/shared/components/library-container';
 import { yabbyQueries } from '/@/renderer/features/yabby/api/yabby-api';
-import { YabbyStickerItem } from '/@/renderer/features/yabby/components/yabby-sticker';
+import { YabbyStickerLayer } from '/@/renderer/features/yabby/components/yabby-sticker-layer';
 import { AppRoute } from '/@/renderer/router/routes';
 import { ScrollArea } from '/@/shared/components/scroll-area/scroll-area';
 import { Stack } from '/@/shared/components/stack/stack';
@@ -42,33 +42,14 @@ const AlbumCard = ({ group }: { group: AlbumGroup }) => {
         type: 'itemCard',
     });
     const first = group.stickers[0];
+    const name = [first.albumName, first.albumArtist].filter(Boolean).join(' - ');
     const to = generatePath(AppRoute.LIBRARY_ALBUMS_DETAIL, { albumId: group.albumId });
 
     return (
-        <div className={styles.card}>
-            <Link className={styles.album} to={to}>
-                {cover ? (
-                    <img alt="" className={styles.cover} loading="lazy" src={cover} />
-                ) : (
-                    <div className={styles.cover} />
-                )}
-                <div>
-                    <Text fw={600} lineClamp={2}>
-                        {first.albumName ?? 'Unknown album'}
-                    </Text>
-                    {first.albumArtist && (
-                        <Text isMuted lineClamp={1} size="sm">
-                            {first.albumArtist}
-                        </Text>
-                    )}
-                </div>
-            </Link>
-            <Stack gap="sm">
-                {group.stickers.map((sticker) => (
-                    <YabbyStickerItem key={sticker.id} sticker={sticker} />
-                ))}
-            </Stack>
-        </div>
+        <Link aria-label={name || 'Album'} className={styles.card} title={name} to={to}>
+            {cover && <img alt="" className={styles.cover} loading="lazy" src={cover} />}
+            <YabbyStickerLayer stickers={group.stickers} />
+        </Link>
     );
 };
 
@@ -86,9 +67,7 @@ const YabbyRoute = () => {
                         Stickered on Yabbyville
                     </TextTitle>
                     {!hasToken && (
-                        <Text isMuted>
-                            Add your Yabbyville token in Settings &gt; Yabbyville.
-                        </Text>
+                        <Text isMuted>Add your Yabbyville token in Settings &gt; Yabbyville.</Text>
                     )}
                     {recent.isError && <Text isMuted>{(recent.error as Error).message}</Text>}
                     {hasToken && recent.isSuccess && groups.length === 0 && (
