@@ -112,10 +112,6 @@ a:focus-visible {
     border-right: 1px solid var(--yv-pale);
 }
 
-.fs-player-bar-module-container {
-    background: #fff;
-    border-top: 1px solid var(--yv-blue);
-}
 
 .mantine-Divider-root {
     border-color: var(--yv-blue) !important;
@@ -155,4 +151,174 @@ a:focus-visible {
 
 :focus-visible {
     outline-color: var(--yv-orange);
+}
+
+/* ── Player bar: the yabbyville.xyz radio ──────────────── */
+
+/* White like the site. By id: the stock rule tints the bar per colour
+   scheme with a more specific selector than a class alone. */
+#player-bar {
+    position: relative;
+    box-sizing: border-box;
+
+    /* Room for the rule below, so the controls centre in what is left of the
+       90px bar: about 8px clear under the rule and the same at the bottom. */
+    padding-top: 11px;
+    background: #fff;
+    border-top: 0;
+}
+
+/* The right column sat at the top of the bar with an empty row under it;
+   centred without that row it balances the transport. */
+.fs-playerbar-module-right-grid-item > div {
+    justify-content: center;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.fs-playerbar-module-right-grid-item > div > :empty {
+    display: none;
+}
+
+.fs-left-controls-module-image-wrapper {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* The starry rule the Yabby player hangs from, in place of a top border.
+   Long enough for any window; the overflow is clipped. */
+.fs-player-bar-module-container::before {
+    position: absolute;
+    top: 1px;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    overflow: hidden;
+    font-family: var(--yv-font-mono);
+    font-size: 0.65rem;
+    line-height: 1;
+    color: var(--yv-blue-dim);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    pointer-events: none;
+    content: '·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆·˚⋆~✦~⋆˚·☆';
+}
+
+/* Seek and volume as block glyphs: the unfilled track is a row of light
+   shade, the filled part solid. Seek fills pink, volume blue, as on the site.
+   The waveform seek style draws on a canvas, so it keeps its own look. */
+.fs-playerbar-slider-module-root .mantine-Slider-track {
+    height: 0.75rem;
+}
+
+.fs-playerbar-slider-module-root .mantine-Slider-track::before {
+    overflow: hidden;
+    font-family: var(--yv-font-mono);
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+    color: var(--yv-blue-dim);
+    white-space: nowrap;
+    content: '░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░';
+    background: none;
+    border-radius: 0;
+}
+
+.fs-playerbar-slider-module-root .mantine-Slider-bar,
+.fs-playerbar-slider-module-root:hover .mantine-Slider-bar,
+.fs-playerbar-slider-module-root:focus .mantine-Slider-bar {
+    background-color: var(--yv-blue);
+    border-radius: 0;
+}
+
+.fs-playerbar-slider-module-slider-wrapper .mantine-Slider-bar,
+.fs-playerbar-slider-module-slider-wrapper .fs-playerbar-slider-module-root:hover .mantine-Slider-bar,
+.fs-playerbar-slider-module-slider-wrapper .fs-playerbar-slider-module-root:focus .mantine-Slider-bar {
+    background-color: var(--yv-pink);
+}
+
+/* No round handle: the edge of the fill is the position. A dotted outline
+   marks keyboard focus, as on the site. */
+.fs-playerbar-slider-module-root .mantine-Slider-thumb {
+    opacity: 0 !important;
+}
+
+.fs-playerbar-slider-module-root:focus-within .mantine-Slider-track {
+    outline: 1px dotted var(--yv-blue);
+    outline-offset: 2px;
+}
+
+.fs-playerbar-slider-module-label {
+    font-family: var(--yv-font-mono);
+    font-weight: 400;
+    color: #fff;
+    background: var(--yv-blue);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* Transport as boxed keys rather than round icons: play and the skip
+   buttons either side of it, which carry no class of their own. */
+.fs-playerbar-module-center-grid-item .fs-player-button-module-main,
+.fs-center-controls-module-buttons-container button:has(+ .fs-player-button-module-main),
+.fs-player-button-module-main + button {
+    background: var(--yv-pale) !important;
+    border: 1px solid var(--yv-blue);
+    border-radius: 0;
+}
+
+.fs-playerbar-module-center-grid-item .fs-player-button-module-main svg {
+    color: var(--yv-blue);
+    fill: var(--yv-blue);
+}
+
+.fs-playerbar-module-center-grid-item .fs-player-button-module-main:hover,
+.fs-center-controls-module-buttons-container button:has(+ .fs-player-button-module-main):hover,
+.fs-player-button-module-main + button:hover {
+    border-color: var(--yv-orange);
+}
+
+/* The little man from the site's player, beside the now-playing text. He
+   holds still while paused and dances while something plays. */
+.fs-playerbar-module-left-grid-item {
+    display: flex;
+    align-items: center;
+}
+
+.fs-playerbar-module-left-grid-item > * {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.fs-playerbar-module-left-grid-item::after {
+    flex: 0 0 auto;
+    padding: 0 1rem;
+    font-family: var(--yv-font-mono);
+    font-size: 0.75rem;
+    line-height: 1.2;
+    color: var(--yv-blue);
+    white-space: pre;
+    content: '   ___\A d(♥_♥)b    ♬·¯·♩¸¸♪·¯·♫¸';
+    opacity: 0.55;
+}
+
+.fs-player-bar-module-container:has(.player-state-playing)
+    .fs-playerbar-module-left-grid-item::after {
+    opacity: 1;
+    animation: yv-dance 1s steps(1, end) infinite;
+}
+
+@keyframes yv-dance {
+    0% {
+        content: '   ___\A d(♥_♥)b    ♬·¯·♩¸¸♪·¯·♫¸';
+    }
+
+    50% {
+        content: '   ___\A d(♥.♥)b    ♬.-.♩.-♪·_,♫ ';
+    }
+}
+
+@media (width < 1200px) {
+    .fs-playerbar-module-left-grid-item::after {
+        display: none;
+    }
 }
