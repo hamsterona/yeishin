@@ -1,3 +1,4 @@
+import isElectron from 'is-electron';
 import { memo } from 'react';
 
 import { DraggableItems } from '/@/renderer/features/settings/components/general/draggable-items';
@@ -16,6 +17,8 @@ const HOME_ITEMS: Array<[string, string]> = [
     [HomeItem.RECENTLY_ADDED, 'page.home.newlyAdded'],
     [HomeItem.RECENTLY_RELEASED, 'page.home.recentlyReleased'],
     [HomeItem.MOST_PLAYED, 'page.home.mostPlayed'],
+    // Yeishin: English only, t() falls back to the key.
+    ...(isElectron() ? [[HomeItem.YABBY, 'Yabby stickers'] as [string, string]] : []),
 ];
 
 export const HomeSettings = memo(() => {
