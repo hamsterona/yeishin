@@ -13,6 +13,7 @@ import { LibraryContainer } from '/@/renderer/features/shared/components/library
 import { LibraryHeaderBar } from '/@/renderer/features/shared/components/library-header-bar';
 import { PageErrorBoundary } from '/@/renderer/features/shared/components/page-error-boundary';
 import { SongInfiniteCarousel } from '/@/renderer/features/songs/components/song-infinite-carousel';
+import { YabbyStickerCarousel } from '/@/renderer/features/yabby/components/yabby-sticker-carousel';
 import {
     HomeFeatureStyle,
     HomeItem,
@@ -85,12 +86,21 @@ const HomeRoute = () => {
             sortOrder: SortOrder.DESC,
             title: t('page.home.recentlyReleased'),
         },
+        [HomeItem.YABBY]: {
+            enableRefresh: true,
+            title: 'Yabby stickers',
+        },
     };
 
     const sortedItems = homeItems.filter((item) => !item.disabled);
 
     const sortedCarousel = sortedItems
-        .filter((item) => item.id !== HomeItem.GENRES && item.id !== HomeItem.PLAYLISTS)
+        .filter(
+            (item) =>
+                item.id !== HomeItem.GENRES &&
+                item.id !== HomeItem.PLAYLISTS &&
+                item.id !== HomeItem.YABBY,
+        )
         .map((item) => ({
             ...carousels[item.id],
             uniqueId: item.id,
@@ -136,6 +146,16 @@ const HomeRoute = () => {
                                         enableRefresh={carousels[item.id].enableRefresh}
                                         key="home-playlists"
                                         title={t('page.home.playlists')}
+                                    />
+                                );
+                            }
+
+                            if (item.id === HomeItem.YABBY) {
+                                return (
+                                    <YabbyStickerCarousel
+                                        containerQuery={containerQuery}
+                                        key="home-yabby"
+                                        title={carousels[item.id].title}
                                     />
                                 );
                             }

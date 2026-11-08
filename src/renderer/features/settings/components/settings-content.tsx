@@ -7,6 +7,7 @@ import { HotkeysTab } from '/@/renderer/features/settings/components/hotkeys/hot
 import { PlaybackTab } from '/@/renderer/features/settings/components/playback/playback-tab';
 import { WindowTab } from '/@/renderer/features/settings/components/window/window-tab';
 import { LibraryContainer } from '/@/renderer/features/shared/components/library-container';
+import { YabbySettings } from '/@/renderer/features/yabby/components/yabby-settings';
 import { useSettingsStore, useSettingsStoreActions } from '/@/renderer/store/settings.store';
 import { ScrollArea } from '/@/shared/components/scroll-area/scroll-area';
 import { Tabs } from '/@/shared/components/tabs/tabs';
@@ -33,6 +34,7 @@ export const SettingsContent = () => {
                         {isElectron() && (
                             <Tabs.Tab value="window">{t('page.setting.windowTab')}</Tabs.Tab>
                         )}
+                        {isElectron() && <Tabs.Tab value="yabby">Yabbyville</Tabs.Tab>}
                         <Tabs.Tab value="advanced">{t('page.setting.advanced')}</Tabs.Tab>
                     </Tabs.List>
                     <Tabs.Panel value="general">
@@ -47,6 +49,11 @@ export const SettingsContent = () => {
                     {isElectron() && (
                         <Tabs.Panel value="window">
                             <WindowTab />
+                        </Tabs.Panel>
+                    )}
+                    {isElectron() && (
+                        <Tabs.Panel value="yabby">
+                            <YabbySettings />
                         </Tabs.Panel>
                     )}
                     <Tabs.Panel value="advanced">

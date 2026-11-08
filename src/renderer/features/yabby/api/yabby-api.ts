@@ -7,6 +7,9 @@ const yabby = isElectron() ? window.api.yabby : null;
 
 const STALE_MS = 5 * 60 * 1000;
 
+/** Recent stickers fetched for the Yabby page and home row (shared cache). */
+export const YABBY_RECENT_LIMIT = 200;
+
 function unwrap<T>(result: YabbyResult<T>): T {
     if (!result.ok) throw new Error(result.error);
     return result.data;

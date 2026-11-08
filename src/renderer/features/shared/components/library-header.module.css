@@ -125,6 +125,12 @@
     }
 }
 
+.image-frame {
+    position: relative;
+    line-height: 0;
+    border-radius: 5px;
+}
+
 .image-overlay {
     position: absolute;
     right: var(--theme-spacing-xs);

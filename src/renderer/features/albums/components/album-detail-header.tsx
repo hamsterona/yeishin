@@ -17,6 +17,7 @@ import {
 import { useSetFavorite } from '/@/renderer/features/shared/hooks/use-set-favorite';
 import { useSetRating } from '/@/renderer/features/shared/hooks/use-set-rating';
 import { songsQueries } from '/@/renderer/features/songs/api/songs-api';
+import { YabbyAlbumCoverStickers } from '/@/renderer/features/yabby/components/yabby-sticker-layer';
 import { AppRoute } from '/@/renderer/router/routes';
 import { useCurrentServer, useShowFavorites, useShowRatings } from '/@/renderer/store';
 import { useArtistRadioCount, usePlayButtonBehavior } from '/@/renderer/store/settings.store';
@@ -249,6 +250,7 @@ export const AlbumDetailHeader = forwardRef<HTMLDivElement>((_props, ref) => {
     return (
         <Stack ref={ref}>
             <LibraryHeader
+                imageDecoration={<YabbyAlbumCoverStickers albumId={albumId} />}
                 item={{
                     children: headerItem,
                     dominantColor: detailQuery?.data?.dominantColor,

@@ -3,11 +3,13 @@ import { ipcMain, safeStorage } from 'electron';
 import { store } from '/@/main/features/core/settings';
 import log from '/@/main/logger';
 import {
+    YABBY_COVER_SIZE,
     YABBY_DEFAULT_SITE_URL,
     YABBY_MAX_ALBUMS_PER_QUERY,
     YabbyConfig,
     YabbyResult,
     YabbySticker,
+    YabbyStickerPosition,
 } from '/@/shared/types/yabby';
 
 // The Yabbyville token lives only in the main process, encrypted with the OS
@@ -51,6 +53,18 @@ function validSiteUrl(value: string): null | string {
 }
 
 const asString = (value: unknown): null | string => (typeof value === 'string' ? value : null);
+
+const asCoord = (value: unknown): null | number =>
+    typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= YABBY_COVER_SIZE
+        ? value
+        : null;
+
+function asPosition(value: unknown): null | YabbyStickerPosition {
+    const p = value as null | undefined | { x?: unknown; y?: unknown };
+    const x = asCoord(p?.x);
+    const y = asCoord(p?.y);
+    return x === null || y === null ? null : { x, y };
+}
 
 async function fetchStickers(query: string): Promise<YabbyResult<YabbySticker[]>> {
     const token = readToken();
@@ -101,6 +115,7 @@ function toSticker(doc: WireDoc, names: Record<string, string>, site: string): n
         albumName: asString(d.albumName),
         id: doc.id,
         imageUrl: `${site}${image}`,
+        position: asPosition(d.position),
         text: asString(d.text) ?? '',
         timestamp: typeof ts?.ms === 'number' ? ts.ms : 0,
         userId,

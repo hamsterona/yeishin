@@ -76,6 +76,7 @@ const HomeItemSchema = z.enum([
     'recentlyAdded',
     'recentlyPlayed',
     'recentlyReleased',
+    'yabby',
 ]);
 
 const AlbumGroupItemSchema = z.enum([
@@ -982,6 +983,7 @@ export enum HomeItem {
     RECENTLY_ADDED = 'recentlyAdded',
     RECENTLY_PLAYED = 'recentlyPlayed',
     RECENTLY_RELEASED = 'recentlyReleased',
+    YABBY = 'yabby',
 }
 
 export enum PlayerbarSliderType {
@@ -1253,6 +1255,7 @@ const defaultHomeItemOrder: HomeItem[] = [
     HomeItem.RECENTLY_PLAYED,
     HomeItem.MOST_PLAYED,
     HomeItem.PLAYLISTS,
+    HomeItem.YABBY,
 ];
 
 const homeItems = defaultHomeItemOrder.map((id) => ({
