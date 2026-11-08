@@ -35,6 +35,7 @@ import { solarizedLight } from '/@/shared/themes/solarized-light/solarized-light
 import { tokyoNight } from '/@/shared/themes/tokyo-night/tokyo-night';
 import { vscodeDarkPlus } from '/@/shared/themes/vscode-dark-plus/vscode-dark-plus';
 import { vscodeLightPlus } from '/@/shared/themes/vscode-light-plus/vscode-light-plus';
+import { yabbyville } from '/@/shared/themes/yabbyville/yabbyville';
 import { zenburn } from '/@/shared/themes/zenburn/zenburn';
 
 export const appTheme: Record<AppTheme, AppThemeConfiguration> = {
@@ -69,6 +70,7 @@ export const appTheme: Record<AppTheme, AppThemeConfiguration> = {
     [AppTheme.TOKYO_NIGHT]: tokyoNight,
     [AppTheme.VSCODE_DARK_PLUS]: vscodeDarkPlus,
     [AppTheme.VSCODE_LIGHT_PLUS]: vscodeLightPlus,
+    [AppTheme.YABBYVILLE]: yabbyville,
     [AppTheme.ZENBURN]: zenburn,
 };
 

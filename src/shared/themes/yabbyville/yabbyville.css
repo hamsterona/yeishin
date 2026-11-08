@@ -1,0 +1,158 @@
+/* stylelint-disable selector-class-pattern */
+
+/*
+ * Yabbyville: the yabbyville.xyz look. White page, everything set in mono
+ * and coloured Yabby blue, section titles in pink Avara italic, orange on
+ * hover, pink for "you are here". Controls are words on a line of type
+ * rather than boxes, so fills and shadows are kept light.
+ *
+ * Palette (Yabby src/App.css :root):
+ *   --colour2 #1a2ecc  blue: text, accent, rules
+ *   --colour3 #e87a3a  orange: hover / focus
+ *   --colour7 #f52bc9  pink: active item, section titles
+ *   #5566c9            dim blue: muted text, unfilled track
+ *   #eef1fb            pale blue: surfaces
+ */
+
+@font-face {
+    font-family: CommitMono;
+    font-style: normal;
+    font-weight: 400;
+    src: url('../../../../assets/fonts/CommitMono-400-Regular.otf') format('opentype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: CommitMono;
+    font-style: normal;
+    font-weight: 700;
+    src: url('../../../../assets/fonts/CommitMono-700-Regular.otf') format('opentype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: AvaraItalic;
+    font-style: normal;
+    font-weight: normal;
+    src: url('../../../../assets/fonts/Avara-BoldItalic.otf') format('opentype');
+    font-display: swap;
+}
+
+:root {
+    --yv-blue: #1a2ecc;
+    --yv-blue-dim: #5566c9;
+    --yv-orange: #e87a3a;
+    --yv-pink: #f52bc9;
+    --yv-pale: #eef1fb;
+    --yv-font-mono: 'CommitMono', 'Noto Sans JP', 'Noto Sans Hebrew', monospace;
+    --yv-font-display: 'AvaraItalic', 'Libre Baskerville', 'Georgia', serif;
+
+    /* The font setting writes this inline on <html>; the theme's type is part
+       of the look, so it wins while Yabbyville is selected. */
+    --theme-content-font-family: var(--yv-font-mono) !important;
+}
+
+/* ── Type ──────────────────────────────────────────────── */
+
+h3.fs-text-title-module-root {
+    font-family: var(--yv-font-display);
+    font-size: 1.9rem;
+    font-weight: normal !important;
+    color: var(--yv-pink);
+    letter-spacing: 0;
+}
+
+/* The big feature carousel keeps its own titles on the artwork. */
+[class*='feature-carousel'] h3.fs-text-title-module-root {
+    font-family: var(--yv-font-mono);
+    font-size: inherit;
+    color: inherit;
+}
+
+a:hover,
+a:focus-visible {
+    color: var(--yv-orange);
+}
+
+.fs-text-title-module-link:hover,
+.fs-text-module-link:hover {
+    color: var(--yv-orange) !important;
+}
+
+::selection {
+    color: #fff;
+    background: var(--yv-pink);
+}
+
+/* ── Sidebar ───────────────────────────────────────────── */
+
+.fs-sidebar-item-module-item,
+.fs-sidebar-item-module-label {
+    font-weight: 400;
+}
+
+.fs-sidebar-item-module-link:hover {
+    color: var(--yv-orange);
+}
+
+/* The page you are on, marked the way the Yabby rail marks it. */
+.fs-sidebar-item-module-link.fs-sidebar-item-module-active {
+    font-weight: 700;
+    color: var(--yv-pink);
+}
+
+.fs-sidebar-module-accordion-control {
+    background-color: transparent;
+}
+
+/* ── Rules instead of boxes ────────────────────────────── */
+
+.fs-left-sidebar-module-container,
+.fs-sidebar-module-container {
+    border-right: 1px solid var(--yv-pale);
+}
+
+.fs-player-bar-module-container {
+    background: #fff;
+    border-top: 1px solid var(--yv-blue);
+}
+
+.mantine-Divider-root {
+    border-color: var(--yv-blue) !important;
+}
+
+/* ── Genres on the home page ───────────────────────────── */
+
+.fs-featured-genres-module-genre-container {
+    background-color: transparent;
+    border-radius: 0;
+}
+
+.fs-featured-genres-module-genre-container::before {
+    width: 0.3rem;
+}
+
+.fs-featured-genres-module-genre-link {
+    font-weight: 400;
+}
+
+.fs-featured-genres-module-genre-link:hover {
+    color: var(--yv-orange);
+    box-shadow: none;
+}
+
+/* ── Controls ──────────────────────────────────────────── */
+
+.mantine-Slider-track::before {
+    background-color: var(--yv-pale);
+}
+
+.mantine-Badge-root {
+    font-family: var(--yv-font-mono);
+    text-transform: lowercase;
+    letter-spacing: 0.06em;
+}
+
+:focus-visible {
+    outline-color: var(--yv-orange);
+}

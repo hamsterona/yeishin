@@ -19,6 +19,7 @@ import { FontType } from '/@/shared/types/types';
 export const THEME_DATA = [
     { label: 'Default Dark', type: 'dark', value: AppTheme.DEFAULT_DARK },
     { label: 'Default Light', type: 'light', value: AppTheme.DEFAULT_LIGHT },
+    { label: 'Yabbyville', type: 'light', value: AppTheme.YABBYVILLE },
     { label: 'Nord', type: 'dark', value: AppTheme.NORD },
     { label: 'Dracula', type: 'dark', value: AppTheme.DRACULA },
     { label: 'One Dark', type: 'dark', value: AppTheme.ONE_DARK },
