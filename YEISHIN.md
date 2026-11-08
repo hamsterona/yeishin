@@ -5,7 +5,8 @@ Everything Feishin does, plus:
 
 - the Yabbyville stickers on an album sit on its cover where people placed them,
   with their messages beside the track list;
-- a **Yabby** page in the sidebar lists recently stickered albums;
+- a **Yabby** page in the sidebar lists recently stickered albums, and a
+  "Yabby stickers" home row can be turned on in the home page configuration;
 - Settings > Yabbyville holds the token.
 
 It installs beside stock Feishin (its own app id, settings and updates).
@@ -85,7 +86,8 @@ lives in new files (`src/main/features/core/yabby/`, `src/preload/yabby.ts`,
 | `src/main/features/core/index.ts` | import `./yabby` |
 | `src/preload/index.ts` | expose `yabby` |
 | `src/renderer/router/routes.ts`, `app-router.tsx` | `/yabby` route |
-| `src/renderer/store/settings.store.ts` | Yabby sidebar item (new installs) |
+| `src/renderer/store/settings.store.ts` | Yabby sidebar item (new installs), `HomeItem.YABBY` |
+| `src/renderer/features/home/routes/home-route.tsx`, `settings/components/general/home-settings.tsx` | Yabby stickers home row |
 | `src/renderer/features/sidebar/components/sidebar-icon.tsx` | sticker icon |
 | `src/renderer/features/settings/components/settings-content.tsx` | Yabbyville tab |
 | `src/renderer/features/settings/components/window/update-settings.tsx` | hide release channel |
