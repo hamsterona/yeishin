@@ -17,8 +17,11 @@ Download the latest release from <https://github.com/hamsterona/yeishin/releases
   because the app is unsigned: More info > Run anyway. Later versions download in
   the background and install when you quit.
 - **macOS:** open the `dmg` (`arm64` for Apple silicon), drag Yeishin to Applications.
-  The app is not notarized, so the first launch needs right-click > Open > Open, or
-  `xattr -cr /Applications/Yeishin.app`. When a new version is out, Yeishin says so;
+  The app is not notarized, so macOS refuses the first launch ("Yeishin" Not Opened).
+  Click Done, then System Settings > Privacy & Security > Open Anyway (macOS 15+;
+  right-click > Open no longer works). Or in Terminal:
+  `xattr -dr com.apple.quarantine /Applications/Yeishin.app`.
+  Each downloaded update needs the same once. When a new version is out, Yeishin says so;
   download it and replace the app.
 
 Then add your Navidrome server as in Feishin, make a token on your Yabbyville
