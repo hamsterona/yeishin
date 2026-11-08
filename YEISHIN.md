@@ -86,6 +86,7 @@ lives in new files (`src/main/features/core/yabby/`, `src/preload/yabby.ts`,
 | `src/renderer/features/settings/components/general/general-tab.tsx` | Yabbyville section |
 | `src/renderer/features/settings/components/window/update-settings.tsx` | hide release channel |
 | `src/renderer/features/albums/components/album-detail-content.tsx` | album stickers |
+| `assets/icons/*` (not `IconTemplate*`), `media/feishin.icon/icon.json` | pink tint of the Feishin icon |
 | `.github/workflows/` | upstream publish/stale workflows removed; `release.yml`, `sync-upstream.yml` added |
 
 Strings are English only for now (no locale file edits, so no Weblate conflicts).
@@ -96,6 +97,10 @@ Strings are English only for now (no locale file edits, so no Weblate conflicts)
 pnpm install
 pnpm dev
 ```
+
+Icons: the PNG/ICO files are the Feishin ones mapped from grey to pink (glyph
+plum `#4a0a2c`, background `#ffc4de`); the macOS `.icon` carries the same colours
+in `icon.json`. Redo both if upstream changes its icon.
 
 `pnpm package:dev` builds an unpacked app; on macOS it needs Xcode 26 for the
 `.icon` file (CI has it).
