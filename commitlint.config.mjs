@@ -14,6 +14,7 @@ const config = {
                 'library',
                 'lyrics',
                 'player',
+                'yabby',
                 'radio',
                 'release',
                 'remote',

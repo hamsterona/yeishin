@@ -57,15 +57,17 @@ const ALPHA_UPDATER_CONFIG: {
 };
 
 const GITHUB_UPDATER_CONFIG = {
-    owner: 'jeffvli',
+    owner: 'hamsterona',
     provider: 'github' as const,
-    repo: 'feishin',
+    repo: 'yeishin',
 };
 
 type UpdaterInstance = AppImageUpdater | MacUpdater | NsisUpdater | typeof autoUpdater;
 
 class AppUpdater {
     constructor() {
+        // Yeishin publishes one channel, from its own GitHub releases.
+        store.set('release_channel', 'latest');
         const effectiveChannel = store.get('release_channel') as string;
         log.info('Effective update channel:', effectiveChannel);
         if (effectiveChannel === 'alpha') {
@@ -855,7 +857,7 @@ async function createWindow(first = true): Promise<void> {
     });
 
     if (isWindows()) {
-        app.setAppUserModelId('org.jeffvli.feishin');
+        app.setAppUserModelId('xyz.yabbyville.yeishin');
     }
 
     menuBuilder = new MenuBuilder(mainWindow, showMainWindow);

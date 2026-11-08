@@ -1,0 +1,74 @@
+name: Release
+
+# Push a tag yeishin-v<package.json version> on the yabby branch to build and
+# publish macOS and Windows installers to a GitHub release. The installed apps
+# check that release feed for updates.
+
+on:
+    push:
+        tags:
+            - 'yeishin-v*'
+
+permissions:
+    contents: write
+
+jobs:
+    prepare:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+
+            - name: Tag matches package.json version
+              run: |
+                  version=$(node -p "require('./package.json').version")
+                  if [ "yeishin-v$version" != "$GITHUB_REF_NAME" ]; then
+                    echo "Tag $GITHUB_REF_NAME does not match package.json version $version" >&2
+                    exit 1
+                  fi
+
+            - name: Create draft release
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  gh release create "$GITHUB_REF_NAME" --draft --verify-tag \
+                    --title "Yeishin ${GITHUB_REF_NAME#yeishin-v}" \
+                    --notes "Yeishin, Feishin with Yabbyville stickers. See the commit history for changes."
+
+    build:
+        needs: prepare
+        runs-on: ${{ matrix.os }}
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - os: macos-26
+                      script: publish:mac
+                    - os: windows-latest
+                      script: publish:win
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: pnpm/action-setup@v4
+
+            - run: pnpm install
+
+            - name: Build and upload to the draft release
+              env:
+                  NODE_OPTIONS: --max-old-space-size=4096
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              uses: nick-invision/retry@v3.0.2
+              with:
+                  timeout_minutes: 30
+                  max_attempts: 3
+                  retry_on: error
+                  command: pnpm run ${{ matrix.script }}
+                  on_retry_command: pnpm cache delete
+
+    publish:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Publish the release
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false --latest

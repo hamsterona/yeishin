@@ -61,7 +61,8 @@ export const UpdateSettings = memo(() => {
             description: t('setting.releaseChannel', {
                 context: 'description',
             }),
-            isHidden: disableAutoUpdates(),
+            // Yeishin publishes one channel.
+            isHidden: true,
             title: t('setting.releaseChannel'),
         },
         {

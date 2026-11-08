@@ -1,0 +1,84 @@
+name: Sync upstream
+
+# Weekly: if Feishin has published a release tag that the yabby branch does
+# not contain, merge it on a branch and open a pull request. A merge that
+# conflicts opens an issue instead. Upstream tags are never pushed here.
+
+on:
+    schedule:
+        - cron: '0 6 * * 1'
+    workflow_dispatch:
+
+permissions:
+    contents: write
+    pull-requests: write
+    issues: write
+
+jobs:
+    sync:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+              with:
+                  ref: yabby
+                  fetch-depth: 0
+
+            - name: Find the newest upstream release
+              id: find
+              run: |
+                  git fetch --no-tags https://github.com/jeffvli/feishin.git '+refs/tags/v*:refs/upstream-tags/v*'
+                  tag=$(git for-each-ref --format='%(refname:lstrip=2)' refs/upstream-tags \
+                    | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
+                  echo "tag=$tag" >> "$GITHUB_OUTPUT"
+                  if git merge-base --is-ancestor "refs/upstream-tags/$tag" HEAD; then
+                    echo "merged=true" >> "$GITHUB_OUTPUT"
+                  else
+                    echo "merged=false" >> "$GITHUB_OUTPUT"
+                  fi
+
+            - name: Merge it on a branch
+              if: steps.find.outputs.merged == 'false'
+              id: merge
+              env:
+                  TAG: ${{ steps.find.outputs.tag }}
+              run: |
+                  git config user.name 'github-actions[bot]'
+                  git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+                  branch="sync/$TAG"
+                  if git ls-remote --exit-code --heads origin "$branch" >/dev/null; then
+                    echo "Branch $branch already open" && echo "state=open" >> "$GITHUB_OUTPUT" && exit 0
+                  fi
+                  git switch -c "$branch"
+                  if git merge --no-ff --no-edit -m "chore(release): merge upstream $TAG" "refs/upstream-tags/$TAG"; then
+                    git push origin "$branch"
+                    echo "state=merged" >> "$GITHUB_OUTPUT"
+                  else
+                    git diff --name-only --diff-filter=U > conflicts.txt
+                    git merge --abort
+                    echo "state=conflict" >> "$GITHUB_OUTPUT"
+                  fi
+
+            - name: Open a pull request
+              if: steps.merge.outputs.state == 'merged'
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  TAG: ${{ steps.find.outputs.tag }}
+              run: |
+                  gh pr create --base yabby --head "sync/$TAG" \
+                    --title "Merge upstream Feishin $TAG" \
+                    --body "Merges Feishin $TAG. Before merging: build and smoke test, then bump package.json to ${TAG#v} with patch x100 + 1 (see YEISHIN.md) and tag a release."
+
+            - name: Open an issue for conflicts
+              if: steps.merge.outputs.state == 'conflict'
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  TAG: ${{ steps.find.outputs.tag }}
+              run: |
+                  {
+                    echo "Merging Feishin $TAG into yabby conflicts in:"
+                    echo
+                    sed 's/^/- /' conflicts.txt
+                    echo
+                    echo "Resolve locally: see YEISHIN.md, Updating from upstream."
+                  } > body.md
+                  gh issue create --title "Upstream $TAG conflicts with yabby" --body-file body.md

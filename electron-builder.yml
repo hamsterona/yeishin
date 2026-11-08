@@ -1,5 +1,5 @@
-appId: org.jeffvli.feishin
-productName: Feishin
+appId: xyz.yabbyville.yeishin
+productName: Yeishin
 artifactName: ${productName}-${version}-${os}-${arch}.${ext}
 electronVersion: 43.7.0
 directories:
@@ -71,7 +71,8 @@ npmRebuild: false
 afterAllArtifactBuild: scripts/after-all-artifact-build.mjs
 publish:
     provider: github
-    owner: jeffvli
-    repo: feishin
+    owner: hamsterona
+    repo: yeishin
     channel: latest
+    tagNamePrefix: yeishin-v
     releaseType: draft
