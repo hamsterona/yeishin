@@ -87,7 +87,7 @@ const YabbyRoute = () => {
                     </TextTitle>
                     {!hasToken && (
                         <Text isMuted>
-                            Add your Yabbyville token in Settings &gt; General &gt; Yabbyville.
+                            Add your Yabbyville token in Settings &gt; Yabbyville.
                         </Text>
                     )}
                     {recent.isError && <Text isMuted>{(recent.error as Error).message}</Text>}

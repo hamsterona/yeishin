@@ -65,6 +65,7 @@ export const YabbySettings = memo(() => {
                         onChange={(e) => setToken(e.currentTarget.value)}
                         placeholder="yv_…"
                         value={token}
+                        width={240}
                     />
                     <Button disabled={!token} onClick={saveToken} variant="filled">
                         Save
@@ -84,6 +85,7 @@ export const YabbySettings = memo(() => {
                         aria-label="Yabbyville address"
                         onChange={(e) => setSite(e.currentTarget.value)}
                         value={site ?? config.data?.siteUrl ?? ''}
+                        width={240}
                     />
                     <Button disabled={site === null} onClick={saveSite} variant="default">
                         Save
