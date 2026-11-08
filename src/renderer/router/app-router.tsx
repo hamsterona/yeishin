@@ -86,6 +86,8 @@ const FavoritesRoute = lazy(() => import('/@/renderer/features/favorites/routes/
 
 const SettingsRoute = lazy(() => import('/@/renderer/features/settings/routes/settings-route'));
 
+const YabbyRoute = lazy(() => import('/@/renderer/features/yabby/routes/yabby-route'));
+
 const LazyLyricsSettingsContextModal = lazy(() =>
     import('/@/renderer/features/lyrics/components/lyrics-settings-modal').then((module) => ({
         default: module.LyricsSettingsContextModal,
@@ -238,6 +240,7 @@ export const AppRouter = () => {
                                             element={<SettingsRoute />}
                                             path={AppRoute.SETTINGS}
                                         />
+                                        <Route element={<YabbyRoute />} path={AppRoute.YABBY} />
                                         <Route
                                             element={<NowPlayingRoute />}
                                             path={AppRoute.NOW_PLAYING}

@@ -32,6 +32,7 @@ import {
 } from '/@/renderer/features/shared/components/list-sort-by-dropdown';
 import { ListSortOrderToggleButtonControlled } from '/@/renderer/features/shared/components/list-sort-order-toggle-button';
 import { FILTER_KEYS, searchLibraryItems } from '/@/renderer/features/shared/utils';
+import { YabbyAlbumStickers } from '/@/renderer/features/yabby/components/yabby-album-stickers';
 import { useHotkeys } from '/@/renderer/hooks/use-hotkeys';
 import { AppRoute } from '/@/renderer/router/routes';
 import { useCurrentServer, usePlayerSong } from '/@/renderer/store';
@@ -527,6 +528,7 @@ export const AlbumDetailContent = () => {
                         )}
                     </div>
                     <div className={styles.metadataColumn}>
+                        <YabbyAlbumStickers albumId={albumId} />
                         <AlbumMetadataGenres genres={detailQuery?.data?.genres} />
                         <AlbumMetadataTags album={detailQuery?.data} />
                         <AlbumMetadataExternalLinks

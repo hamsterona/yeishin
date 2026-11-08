@@ -13,6 +13,7 @@ import { mpvPlayer, mpvPlayerListener } from './mpv-player';
 import { remote } from './remote';
 import { utils } from './utils';
 import { visualizer } from './visualizer';
+import { yabby } from './yabby';
 
 // Custom APIs for renderer
 const api = {
@@ -32,6 +33,7 @@ const api = {
     remote,
     utils,
     visualizer,
+    yabby,
 };
 
 export type PreloadApi = typeof api;

@@ -1,0 +1,20 @@
+.sticker {
+    display: flex;
+    gap: var(--theme-spacing-sm);
+    align-items: flex-start;
+}
+
+.image {
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}

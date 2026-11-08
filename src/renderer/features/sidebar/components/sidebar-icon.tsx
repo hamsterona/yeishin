@@ -1,6 +1,8 @@
 import {
     RiAlbumFill,
     RiAlbumLine,
+    RiEmojiStickerFill,
+    RiEmojiStickerLine,
     RiFlag2Fill,
     RiFlag2Line,
     RiFolder3Fill,
@@ -75,6 +77,9 @@ export const SidebarIcon = ({ active, route, size }: SidebarIconProps) => {
             case AppRoute.SETTINGS:
                 if (isActive) return <RiSettings2Fill size={size} />;
                 return <RiSettings2Line size={size} />;
+            case AppRoute.YABBY:
+                if (isActive) return <RiEmojiStickerFill size={size} />;
+                return <RiEmojiStickerLine size={size} />;
             case generatePath(AppRoute.SEARCH, { itemType: LibraryItem.SONG }):
                 if (isActive) return <RiSearchFill size={size} />;
                 return <RiSearchLine size={size} />;

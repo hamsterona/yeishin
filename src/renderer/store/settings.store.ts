@@ -1182,6 +1182,7 @@ export const sidebarItems: SidebarItemType[] = [
         label: i18n.t('page.sidebar.favorites'),
         route: AppRoute.FAVORITES,
     },
+    { disabled: false, id: 'Yabby', label: 'Yabby', route: AppRoute.YABBY },
     {
         disabled: false,
         id: 'Albums',
