@@ -1,3 +1,21 @@
+## Yeishin fork
+
+Yeishin is a fork of Feishin (macOS + Windows) that adds Yabbyville stickers. Read `YEISHIN.md` before touching releases, updates, or anything upstream-owned.
+
+- Default branch is `yabby` (a Feishin release tag plus our commits). `development` mirrors upstream and is never committed to. Merge upstream, never rebase.
+- Yeishin code lives in new files: `src/main/features/core/yabby/`, `src/preload/yabby.ts`, `src/renderer/features/yabby/`, `src/shared/types/yabby.ts`. Keep edits to upstream files minimal, and add any upstream file you touch to the table in `YEISHIN.md` (it is what upstream merges conflict on).
+- Version = upstream `major.minor`, patch = upstream patch x 100 + Yeishin build (Feishin 1.17.0 -> Yeishin 1.17.1; 1.17.2 -> 1.17.201). Release: bump `version` in `package.json`, then push tag `yeishin-v<version>`; `.github/workflows/release.yml` builds and publishes.
+- The Yabbyville token is read in the main process only (stored with `safeStorage`), never exposed to the renderer.
+- macOS builds are ad-hoc signed and not notarized, so macOS only gets an update notice (no auto-install); Windows auto-updates. Details in `YEISHIN.md`.
+- UI strings are English only; do not edit locale files (avoids Weblate conflicts).
+
+## Commands
+
+- `pnpm install`, then `pnpm dev` to run the Electron app from source with hot reload. Dev uses a separate userData folder (`Yeishin-dev`), so installed-app settings are untouched.
+- `pnpm lint` = typecheck (node + web) + eslint + stylelint; this is what CI runs. Single file: `pnpm exec eslint <file>`. Typecheck alone: `pnpm typecheck`.
+- There is no test runner or `test` script. CI (`test.yml`) runs lint and commitlint only.
+- `pnpm package:dev` builds an unpacked app but needs Xcode 26 on macOS; use CI for release builds.
+
 ## General guidelines
 
 - Never use the em dash "—". Use plain dash "-" instead.
