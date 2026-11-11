@@ -64,6 +64,8 @@ export interface ItemCardProps {
     enableMultiSelect?: boolean;
     enableNavigation?: boolean;
     imageAsLink?: boolean;
+    /** Drawn over the cover image, beneath the hover controls (poster/default cards). */
+    imageDecoration?: ReactNode;
     imageFetchPriority?: 'auto' | 'high' | 'low';
     internalState?: ItemListStateActions;
     isRound?: boolean;
@@ -81,6 +83,7 @@ export const ItemCard = ({
     enableMultiSelect,
     enableNavigation = true,
     imageAsLink,
+    imageDecoration,
     imageFetchPriority,
     internalState,
     isRound,
@@ -126,6 +129,7 @@ export const ItemCard = ({
                     enableMultiSelect={enableMultiSelect}
                     enableNavigation={enableNavigation}
                     imageAsLink={imageAsLink}
+                    imageDecoration={imageDecoration}
                     imageFetchPriority={imageFetchPriority}
                     imageUrl={imageUrl}
                     internalState={internalState}
@@ -147,6 +151,7 @@ export const ItemCard = ({
                     enableExpansion={enableExpansion}
                     enableNavigation={enableNavigation}
                     imageAsLink={imageAsLink}
+                    imageDecoration={imageDecoration}
                     imageFetchPriority={imageFetchPriority}
                     imageUrl={imageUrl}
                     internalState={internalState}
@@ -186,6 +191,7 @@ const ItemCardStandardImageArea = memo(function ItemCardStandardImageArea({
     handleImageClick,
     handleLinkDragStart,
     imageAsLink,
+    imageDecoration,
     imageFetchPriority,
     internalState,
     isRound,
@@ -205,6 +211,7 @@ const ItemCardStandardImageArea = memo(function ItemCardStandardImageArea({
     handleImageClick: (e: React.MouseEvent<HTMLElement>) => void;
     handleLinkDragStart: (e: React.DragEvent<HTMLAnchorElement>) => void;
     imageAsLink?: boolean;
+    imageDecoration?: ReactNode;
     imageFetchPriority?: 'auto' | 'high' | 'low';
     internalState?: ItemListStateActions;
     isRound?: boolean;
@@ -269,6 +276,7 @@ const ItemCardStandardImageArea = memo(function ItemCardStandardImageArea({
                     type="itemCard"
                 />
             )}
+            {imageDecoration}
             {showFavorite && isFavorite && <div className={styles.favoriteBadge} />}
             {hasRating && <div className={styles.ratingBadge}>{userRating}</div>}
             <AnimatePresence>
@@ -693,6 +701,7 @@ const DefaultItemCard = ({
     enableExpansion,
     enableNavigation,
     imageAsLink,
+    imageDecoration,
     imageFetchPriority,
     internalState,
     isRound,
@@ -792,6 +801,7 @@ const DefaultItemCard = ({
                     handleImageClick={handleImageClick}
                     handleLinkDragStart={handleLinkDragStart}
                     imageAsLink={imageAsLink}
+                    imageDecoration={imageDecoration}
                     imageFetchPriority={imageFetchPriority}
                     internalState={internalState}
                     isRound={isRound}
@@ -856,6 +866,7 @@ const PosterItemCard = ({
     enableMultiSelect,
     enableNavigation,
     imageAsLink,
+    imageDecoration,
     imageFetchPriority,
     internalState,
     isRound,
@@ -1022,6 +1033,7 @@ const PosterItemCard = ({
                     handleImageClick={handleImageClick}
                     handleLinkDragStart={handleLinkDragStart}
                     imageAsLink={imageAsLink}
+                    imageDecoration={imageDecoration}
                     imageFetchPriority={imageFetchPriority}
                     internalState={internalState}
                     isRound={isRound}

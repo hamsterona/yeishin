@@ -134,6 +134,7 @@ upstream's change and put the constant back.
 | `src/renderer/features/albums/components/album-detail-content.tsx` | album sticker messages |
 | `src/renderer/features/albums/components/album-detail-header.tsx` | stickers on the cover |
 | `src/renderer/features/shared/components/library-header.tsx` (+ `.module.css`) | `imageDecoration` slot over the cover |
+| `src/renderer/components/item-card/item-card.tsx` | `imageDecoration` slot over poster/default card covers |
 | `assets/icons/*` (not `IconTemplate*`), `media/feishin.icon/icon.json` | pink tint of the Feishin icon |
 | `README.md` | replaced with the Yeishin readme (on conflict keep ours) |
 | `.github/ISSUE_TEMPLATE/config.yml`, `01-feature_request.yml` | point at this repo, upstream for stock bugs |

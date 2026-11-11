@@ -3,15 +3,3 @@
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: var(--theme-spacing-lg);
 }
-
-.card {
-    box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-.card:hover {
-    box-shadow: 0 6px 12px rgb(0 0 0 / 15%);
-    transform: scale(1.05);
-}
