@@ -52,6 +52,26 @@ jobs:
 
             - run: pnpm install
 
+            # macOS updates only install in place when every release is signed by the
+            # same certificate, so never publish an unsigned macOS build.
+            # Exported for macOS only, so Windows stays unsigned. scripts/mac-sign.mjs
+            # signs with the certificate whose SHA-1 is YEISHIN_MAC_SIGN_IDENTITY (public).
+            - name: Use the macOS signing certificate
+              if: runner.os == 'macOS'
+              env:
+                  MAC_CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
+                  MAC_CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+              run: |
+                  if [ -z "$MAC_CSC_LINK" ] || [ -z "$MAC_CSC_KEY_PASSWORD" ]; then
+                    echo "Secrets MAC_CSC_LINK and MAC_CSC_KEY_PASSWORD are required (see YEISHIN.md)" >&2
+                    exit 1
+                  fi
+                  {
+                    echo "CSC_LINK=$MAC_CSC_LINK"
+                    echo "CSC_KEY_PASSWORD=$MAC_CSC_KEY_PASSWORD"
+                    echo "YEISHIN_MAC_SIGN_IDENTITY=BFD00AF9EB4B2C31757869A56496433C5DB2233A"
+                  } >> "$GITHUB_ENV"
+
             - name: Build and upload to the draft release
               env:
                   NODE_OPTIONS: --max-old-space-size=4096
@@ -63,6 +83,15 @@ jobs:
                   retry_on: error
                   command: pnpm run ${{ matrix.script }}
                   on_retry_command: pnpm cache delete
+
+            - name: macOS apps are signed with the Yeishin certificate
+              if: runner.os == 'macOS'
+              run: |
+                  for app in dist/mac*/Yeishin.app; do
+                    codesign --verify --deep --strict "$app"
+                    codesign -d -r- "$app" 2>&1 | grep -qi "certificate root = H\"$YEISHIN_MAC_SIGN_IDENTITY\"" \
+                      || { echo "$app is not signed with the Yeishin certificate" >&2; exit 1; }
+                  done
 
     publish:
         needs: build

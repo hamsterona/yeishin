@@ -6,7 +6,7 @@ Yeishin is a fork of Feishin (macOS + Windows) that adds Yabbyville stickers. Re
 - Yeishin code lives in new files: `src/main/features/core/yabby/`, `src/preload/yabby.ts`, `src/renderer/features/yabby/`, `src/shared/types/yabby.ts`. Keep edits to upstream files minimal, and add any upstream file you touch to the table in `YEISHIN.md` (it is what upstream merges conflict on).
 - Version = upstream `major.minor`, patch = upstream patch x 100 + Yeishin build (Feishin 1.17.0 -> Yeishin 1.17.1; 1.17.2 -> 1.17.201). Release: bump `version` in `package.json`, then push tag `yeishin-v<version>`; `.github/workflows/release.yml` builds and publishes.
 - The Yabbyville token is read in the main process only (stored with `safeStorage`), never exposed to the renderer.
-- macOS builds are ad-hoc signed and not notarized, so macOS only gets an update notice (no auto-install); Windows auto-updates. Details in `YEISHIN.md`.
+- macOS builds are signed with one self-signed certificate (not notarized) so updates install in place like on Windows; never release a macOS build signed any other way. Details in `YEISHIN.md`.
 - UI strings are English only; do not edit locale files (avoids Weblate conflicts).
 
 ## Commands

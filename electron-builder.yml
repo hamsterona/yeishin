@@ -43,7 +43,10 @@ mac:
     icon: media/feishin.icon
     type: distribution
     hardenedRuntime: false
+    # Release builds sign with the Yeishin self-signed certificate (see YEISHIN.md);
+    # without YEISHIN_MAC_SIGN_IDENTITY the hook signs ad-hoc.
     identity: "-"
+    sign: ./scripts/mac-sign.mjs
     entitlements: build/entitlements.mac.plist
     entitlementsInherit: build/entitlements.mac.plist
     gatekeeperAssess: false

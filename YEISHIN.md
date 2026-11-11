@@ -23,8 +23,9 @@ Download the latest release from <https://github.com/hamsterona/yeishin/releases
   Click Done, then System Settings > Privacy & Security > Open Anyway (macOS 15+;
   right-click > Open no longer works). Or in Terminal:
   `xattr -dr com.apple.quarantine /Applications/Yeishin.app`.
-  Each downloaded update needs the same once. When a new version is out, Yeishin says so;
-  download it and replace the app.
+  This is needed once per manual install. Later versions download in the background
+  and install when you quit, with no prompts. If an update can't install in place,
+  Yeishin says so; download it and replace the app.
 
 Then add your Navidrome server as in Feishin, make a token on your Yabbyville
 profile (account > yeishin tokens; admins only for now) and paste it into
@@ -34,9 +35,10 @@ Settings > Yabbyville.
 
 The main process (`src/main/features/core/yabby/`) calls
 `GET https://yabbyville.xyz/api/data/stickers?albums=…&names=1` (or
-`order=recent`) with the token. The token is read-only, sticker reads only,
-stored encrypted with the OS keychain (`safeStorage`), and never handed to the
-renderer. Album ids are Navidrome's, the same ones Yabbyville stores.
+`order=recent`) with the token. The token is read-only, sticker reads only, and
+never handed to the renderer. Windows stores it encrypted (`safeStorage`); macOS
+stores it in `yabby-token` in the app's data folder, readable only by your user
+account (see macOS signing below for why not the keychain). Album ids are Navidrome's, the same ones Yabbyville stores.
 
 ## Versions and releases
 
@@ -53,6 +55,39 @@ git tag yeishin-v<version> && git push origin yeishin-v<version>
 `.github/workflows/release.yml` checks the tag matches `package.json`, builds macOS
 (arm64 + x64) and Windows (x64 + arm64), and publishes the GitHub release. Tags are
 prefixed `yeishin-v` so they never clash with Feishin's own `v*` tags.
+
+## macOS signing and updates
+
+macOS builds are signed with one self-signed certificate ("Yeishin Code Signing",
+SHA-1 `BFD00AF9EB4B2C31757869A56496433C5DB2233A`, valid to 2046), not notarized.
+Squirrel.Mac (electron-updater) only installs an update whose signature satisfies
+the running app's designated requirement. Ad-hoc builds (up to 1.17.3) pin that
+to the build's own cdhash, so no update could ever pass ("code failed to satisfy
+specified code requirement(s)"). With the certificate, the requirement is
+`identifier "xyz.yabbyville.yeishin" and certificate root = H"bfd00af9..."`, the
+same for every release.
+
+- `scripts/mac-sign.mjs` (the `mac.sign` hook) signs with the certificate's SHA-1
+  from `YEISHIN_MAC_SIGN_IDENTITY`; electron-builder itself only picks identities
+  macOS trusts. Unset (local builds), it signs ad-hoc.
+- `release.yml` needs repo secrets `MAC_CSC_LINK` (the `.p12`, base64 on one line)
+  and `MAC_CSC_KEY_PASSWORD`. It fails without them and checks the built apps
+  carry the certificate, because one release signed any other way breaks
+  in-place updates for everyone on macOS.
+- **Back up the `.p12` and its password** (password manager plus one offline
+  copy). If it is lost, a new certificate means every macOS user reinstalls by
+  hand once.
+- Gatekeeper still blocks the first manual install (Open Anyway). Updates the app
+  downloads itself carry no quarantine flag, so they launch without prompts.
+- Keychain: macOS partitions keychain items of apps without an Apple Team ID by
+  cdhash, which changes every build, so every `safeStorage` read after an update
+  shows a login-password prompt. That is why the Yabbyville token is a user-only
+  file on macOS (the token is read-only and revocable). Builds that kept it in the
+  keychain are migrated once on first launch: one keychain prompt; if it is denied,
+  the old value is dropped and the token must be pasted again. Feishin's optional
+  saved Navidrome password still uses `safeStorage`, so it can prompt on re-login.
+- If Squirrel rejects an update, `src/main/index.ts` falls back to the old
+  "new version available" notice.
 
 ## Updating from upstream
 
@@ -84,9 +119,9 @@ upstream's change and put the constant back.
 | File | Change |
 |------|--------|
 | `package.json` | name, productName, version, homepage, bugs, author |
-| `electron-builder.yml` | appId, productName, publish to this repo, `yeishin-v` tags, macOS permission texts |
+| `electron-builder.yml` | appId, productName, publish to this repo, `yeishin-v` tags, macOS permission texts, `mac.sign` hook |
 | `commitlint.config.mjs` | `yabby` scope |
-| `src/main/index.ts` | updater repo, app user model id, single `latest` channel, tray tooltip |
+| `src/main/index.ts` | updater repo, app user model id, single `latest` channel, tray tooltip, macOS auto-install with notice fallback |
 | `src/main/features/core/index.ts` | import `./yabby` |
 | `src/preload/index.ts` | expose `yabby` |
 | `src/renderer/router/routes.ts`, `app-router.tsx` | `/yabby` route; `app-router.tsx` imports `features/yabby/startup` |
