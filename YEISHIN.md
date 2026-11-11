@@ -89,7 +89,8 @@ upstream's change and put the constant back.
 | `src/main/index.ts` | updater repo, app user model id, single `latest` channel, tray tooltip |
 | `src/main/features/core/index.ts` | import `./yabby` |
 | `src/preload/index.ts` | expose `yabby` |
-| `src/renderer/router/routes.ts`, `app-router.tsx` | `/yabby` route |
+| `src/renderer/router/routes.ts`, `app-router.tsx` | `/yabby` route; `app-router.tsx` imports `features/yabby/startup` |
+| `.gitignore` | ignore `.env` / `.env.*` (dev login file) |
 | `src/renderer/store/settings.store.ts` | Yabby sidebar item (new installs), `HomeItem.YABBY` |
 | `src/renderer/features/home/routes/home-route.tsx`, `settings/components/general/home-settings.tsx` | Yabby stickers home row |
 | `src/renderer/features/sidebar/components/sidebar-icon.tsx` | sticker icon |
@@ -121,6 +122,18 @@ Upstream strings that say Feishin are rebranded when the locales load.
 pnpm install
 pnpm dev
 ```
+
+To skip setup in dev, copy `.env.example` to `.env.local` (git-ignored) and fill in
+the music server login and, optionally, the Yabbyville token. The main process
+reads it at runtime only when the app is unpackaged, adds the server if it is
+missing (with the password saved so expired sessions sign in again) and sets the
+token if none is saved. Do not switch it to Vite env vars: upstream code reads the
+whole `import.meta.env`, so the renderer bundle would carry every value.
+
+Dev keeps its own settings (`Yeishin-dev`), but the server list lives in the
+renderer's storage for its origin (`localhost:5173`). A second `pnpm dev` (for
+example from another worktree) lands on another port and starts with no servers;
+`.env.local` covers that too.
 
 Icons: the PNG/ICO files are the Feishin ones mapped from grey to pink (glyph
 plum `#4a0a2c`, background `#ffc4de`); the macOS `.icon` carries the same colours

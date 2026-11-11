@@ -1,4 +1,6 @@
-import { ipcMain, safeStorage } from 'electron';
+import { app, ipcMain, safeStorage } from 'electron';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 import { store } from '/@/main/features/core/settings';
 import log from '/@/main/logger';
@@ -7,6 +9,7 @@ import {
     YABBY_DEFAULT_SITE_URL,
     YABBY_MAX_ALBUMS_PER_QUERY,
     YabbyConfig,
+    YabbyDevServer,
     YabbyResult,
     YabbySticker,
     YabbyStickerPosition,
@@ -171,4 +174,48 @@ ipcMain.handle('yabby-stickers-by-albums', (_event, albumIds: string[]) => {
 ipcMain.handle('yabby-stickers-recent', (_event, limit: number) => {
     const n = Number.isInteger(limit) ? Math.min(Math.max(limit, 1), 500) : 100;
     return fetchStickers(`order=recent&limit=${n}`);
+});
+
+// Dev only: `.env.local` in the project root (see `.env.example`) can sign in to
+// the music server and set the Yabbyville token, so a `pnpm dev` profile needs
+// no setup. Read at runtime by the unpackaged app only, so release builds never
+// see it. Vite env vars are not used because the renderer bundle inlines them.
+function readDevEnv(): Record<string, string> {
+    if (app.isPackaged) return {};
+    try {
+        const text = readFileSync(join(app.getAppPath(), '.env.local'), 'utf8');
+        const env: Record<string, string> = {};
+        for (const line of text.split(/\r?\n/)) {
+            const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
+            if (match) env[match[1]] = match[2].replace(/^(['"])(.*)\1$/, '$2');
+        }
+        return env;
+    } catch {
+        return {};
+    }
+}
+
+const devEnv = readDevEnv();
+
+ipcMain.handle('yabby-dev-server', (): null | YabbyDevServer => {
+    const { YEISHIN_PASSWORD, YEISHIN_SERVER_URL, YEISHIN_USERNAME } = devEnv;
+    if (!YEISHIN_SERVER_URL || !YEISHIN_USERNAME || !YEISHIN_PASSWORD) return null;
+    return {
+        name: devEnv.YEISHIN_SERVER_NAME || 'Navidrome',
+        password: YEISHIN_PASSWORD,
+        type: devEnv.YEISHIN_SERVER_TYPE || 'navidrome',
+        url: YEISHIN_SERVER_URL,
+        username: YEISHIN_USERNAME,
+    };
+});
+
+app.whenReady().then(() => {
+    const token = devEnv.YEISHIN_YABBY_TOKEN;
+    if (!token || store.get(TOKEN_KEY)) return;
+    if (!TOKEN_RE.test(token) || !safeStorage.isEncryptionAvailable()) {
+        log.warn('Dev Yabbyville token from .env.local ignored (bad format or no secure storage)');
+        return;
+    }
+    store.set(TOKEN_KEY, safeStorage.encryptString(token).toString('hex'));
+    log.info('Dev Yabbyville token set from .env.local');
 });

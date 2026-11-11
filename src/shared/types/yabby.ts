@@ -4,6 +4,15 @@ export interface YabbyConfig {
     siteUrl: string;
 }
 
+/** Dev-only music server login from `.env.local` (unpackaged app only). */
+export interface YabbyDevServer {
+    name: string;
+    password: string;
+    type: string;
+    url: string;
+    username: string;
+}
+
 export type YabbyResult<T> = { data: T; ok: true } | { error: string; ok: false; status: number };
 
 export interface YabbySticker {

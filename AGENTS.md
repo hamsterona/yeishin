@@ -11,7 +11,7 @@ Yeishin is a fork of Feishin (macOS + Windows) that adds Yabbyville stickers. Re
 
 ## Commands
 
-- `pnpm install`, then `pnpm dev` to run the Electron app from source with hot reload. Dev uses a separate userData folder (`Yeishin-dev`), so installed-app settings are untouched.
+- `pnpm install`, then `pnpm dev` to run the Electron app from source with hot reload. Dev uses a separate userData folder (`Yeishin-dev`), so installed-app settings are untouched. Optional `.env.local` (see `.env.example`) signs in automatically in dev.
 - `pnpm lint` = typecheck (node + web) + eslint + stylelint; this is what CI runs. Single file: `pnpm exec eslint <file>`. Typecheck alone: `pnpm typecheck`.
 - There is no test runner or `test` script. CI (`test.yml`) runs lint and commitlint only.
 - `pnpm package:dev` builds an unpacked app but needs Xcode 26 on macOS; use CI for release builds.

@@ -1,8 +1,10 @@
 import { ipcRenderer } from 'electron';
 
-import type { YabbyConfig, YabbyResult, YabbySticker } from '../shared/types/yabby';
+import type { YabbyConfig, YabbyDevServer, YabbyResult, YabbySticker } from '../shared/types/yabby';
 
 const getConfig = (): Promise<YabbyConfig> => ipcRenderer.invoke('yabby-get-config');
+
+const devServer = (): Promise<null | YabbyDevServer> => ipcRenderer.invoke('yabby-dev-server');
 
 const setSite = (url: string): Promise<YabbyResult<YabbyConfig>> =>
     ipcRenderer.invoke('yabby-set-site', url);
@@ -17,6 +19,7 @@ const recentStickers = (limit: number): Promise<YabbyResult<YabbySticker[]>> =>
     ipcRenderer.invoke('yabby-stickers-recent', limit);
 
 export const yabby = {
+    devServer,
     getConfig,
     recentStickers,
     setSite,

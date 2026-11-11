@@ -8,3 +8,7 @@ release
 .idea
 .scratch
 tsconfig.*.tsbuildinfo
+# Local env (dev login credentials). Never commit.
+.env
+.env.*
+!.env.example
