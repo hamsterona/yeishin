@@ -1,7 +1,8 @@
 import { app, ipcMain, safeStorage } from 'electron';
-import { readFileSync } from 'fs';
+import { chmodSync, existsSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
+import { isMacOS } from '/@/main/env';
 import { store } from '/@/main/features/core/settings';
 import log from '/@/main/logger';
 import {
@@ -15,8 +16,11 @@ import {
     YabbyStickerPosition,
 } from '/@/shared/types/yabby';
 
-// The Yabbyville token lives only in the main process, encrypted with the OS
-// keychain. The renderer can set or clear it but never reads it back.
+// The Yabbyville token lives only in the main process. The renderer can set or
+// clear it but never reads it back. Windows encrypts it with safeStorage. macOS
+// keeps it in a user-only file instead: without an Apple Team ID the keychain
+// asks for the login password after every update (see YEISHIN.md). The token
+// is read-only and revocable, so that trade is worth it.
 
 const SITE_KEY = 'yabby_site_url';
 const TOKEN_KEY = 'yabby_token';
@@ -30,10 +34,15 @@ type WireDoc = { data: Record<string, unknown>; id: string };
 
 function getConfig(): YabbyConfig {
     const site = siteUrl();
-    return { apiUrl: `${site}/api/data`, hasToken: Boolean(store.get(TOKEN_KEY)), siteUrl: site };
+    return { apiUrl: `${site}/api/data`, hasToken: hasToken(), siteUrl: site };
 }
 
-function readToken(): null | string {
+const tokenFile = (): string => join(app.getPath('userData'), 'yabby-token');
+
+const hasToken = (): boolean =>
+    isMacOS() ? existsSync(tokenFile()) : Boolean(store.get(TOKEN_KEY));
+
+function readKeychainToken(): null | string {
     const encrypted = store.get(TOKEN_KEY) as string | undefined;
     if (!encrypted || !safeStorage.isEncryptionAvailable()) return null;
     try {
@@ -42,6 +51,17 @@ function readToken(): null | string {
         log.warn('Yabby token could not be decrypted', error);
         return null;
     }
+}
+
+function readToken(): null | string {
+    if (isMacOS()) {
+        try {
+            return readFileSync(tokenFile(), 'utf8').trim() || null;
+        } catch {
+            return null;
+        }
+    }
+    return readKeychainToken();
 }
 
 function validSiteUrl(value: string): null | string {
@@ -53,6 +73,21 @@ function validSiteUrl(value: string): null | string {
     } catch {
         return null;
     }
+}
+
+// Assumes safeStorage is available on Windows (callers check).
+function writeToken(token: null | string): void {
+    if (!isMacOS()) {
+        if (token === null) store.delete(TOKEN_KEY);
+        else store.set(TOKEN_KEY, safeStorage.encryptString(token).toString('hex'));
+        return;
+    }
+    if (token === null) {
+        rmSync(tokenFile(), { force: true });
+        return;
+    }
+    writeFileSync(tokenFile(), token, { mode: 0o600 });
+    chmodSync(tokenFile(), 0o600);
 }
 
 const asString = (value: unknown): null | string => (typeof value === 'string' ? value : null);
@@ -137,21 +172,21 @@ ipcMain.handle('yabby-set-site', (_event, value: string): YabbyResult<YabbyConfi
 
 ipcMain.handle('yabby-set-token', (_event, value: null | string): YabbyResult<YabbyConfig> => {
     if (value === null) {
-        store.delete(TOKEN_KEY);
+        writeToken(null);
         return { data: getConfig(), ok: true };
     }
     const token = typeof value === 'string' ? value.trim() : '';
     if (!TOKEN_RE.test(token)) {
         return { error: "That doesn't look like a Yeishin token.", ok: false, status: 400 };
     }
-    if (!safeStorage.isEncryptionAvailable()) {
+    if (!isMacOS() && !safeStorage.isEncryptionAvailable()) {
         return {
             error: 'This system has no secure storage for the token.',
             ok: false,
             status: 500,
         };
     }
-    store.set(TOKEN_KEY, safeStorage.encryptString(token).toString('hex'));
+    writeToken(token);
     return { data: getConfig(), ok: true };
 });
 
@@ -209,13 +244,25 @@ ipcMain.handle('yabby-dev-server', (): null | YabbyDevServer => {
     };
 });
 
+// macOS builds before the move kept the token in the keychain. Move it to the
+// file once; this read may show one keychain prompt. If it fails (prompt denied),
+// drop the old value so it never asks again; the user pastes the token again.
+function migrateKeychainToken(): void {
+    if (!isMacOS() || !store.get(TOKEN_KEY)) return;
+    const token = safeStorage.isEncryptionAvailable() ? readKeychainToken() : null;
+    if (token && !hasToken()) writeToken(token);
+    store.delete(TOKEN_KEY);
+    log.info('Yabby token moved out of the keychain', { kept: Boolean(token) });
+}
+
 app.whenReady().then(() => {
+    migrateKeychainToken();
     const token = devEnv.YEISHIN_YABBY_TOKEN;
-    if (!token || store.get(TOKEN_KEY)) return;
-    if (!TOKEN_RE.test(token) || !safeStorage.isEncryptionAvailable()) {
+    if (!token || hasToken()) return;
+    if (!TOKEN_RE.test(token) || (!isMacOS() && !safeStorage.isEncryptionAvailable())) {
         log.warn('Dev Yabbyville token from .env.local ignored (bad format or no secure storage)');
         return;
     }
-    store.set(TOKEN_KEY, safeStorage.encryptString(token).toString('hex'));
+    writeToken(token);
     log.info('Dev Yabbyville token set from .env.local');
 });
