@@ -75,14 +75,18 @@ Fix conflicts (the list below is every upstream file we touch), bump the version
 
 Keep this list complete; it is what a merge can conflict on. Everything else
 lives in new files (`src/main/features/core/yabby/`, `src/preload/yabby.ts`,
-`src/renderer/features/yabby/`, `src/shared/types/yabby.ts`).
+`src/renderer/features/yabby/`, `src/shared/types/yabby.ts`, `src/shared/constants/brand.ts`).
+
+The app name, repo links and release tag prefix live in `src/shared/constants/brand.ts`.
+Upstream files read them from there, so a conflict is usually one line: keep
+upstream's change and put the constant back.
 
 | File | Change |
 |------|--------|
-| `package.json` | name, productName, version |
-| `electron-builder.yml` | appId, productName, publish to this repo, `yeishin-v` tags |
+| `package.json` | name, productName, version, homepage, bugs, author |
+| `electron-builder.yml` | appId, productName, publish to this repo, `yeishin-v` tags, macOS permission texts |
 | `commitlint.config.mjs` | `yabby` scope |
-| `src/main/index.ts` | updater repo, app user model id, single `latest` channel |
+| `src/main/index.ts` | updater repo, app user model id, single `latest` channel, tray tooltip |
 | `src/main/features/core/index.ts` | import `./yabby` |
 | `src/preload/index.ts` | expose `yabby` |
 | `src/renderer/router/routes.ts`, `app-router.tsx` | `/yabby` route |
@@ -95,9 +99,21 @@ lives in new files (`src/main/features/core/yabby/`, `src/preload/yabby.ts`,
 | `src/renderer/features/albums/components/album-detail-header.tsx` | stickers on the cover |
 | `src/renderer/features/shared/components/library-header.tsx` (+ `.module.css`) | `imageDecoration` slot over the cover |
 | `assets/icons/*` (not `IconTemplate*`), `media/feishin.icon/icon.json` | pink tint of the Feishin icon |
+| `README.md` | replaced with the Yeishin readme (on conflict keep ours) |
+| `.github/ISSUE_TEMPLATE/config.yml`, `01-feature_request.yml` | point at this repo, upstream for stock bugs |
+| `src/i18n/i18n.ts` | Feishin -> Yeishin in every locale string at load (`rebrandString`) |
+| `src/renderer/index.html` | title; upstream Umami analytics script removed |
+| `src/renderer/features/settings/components/advanced/advanced-tab.tsx` | analytics opt-out hidden (nothing is sent) |
+| `src/renderer/layouts/window-bar.tsx` | window title |
+| `src/renderer/hooks/use-github-releases.ts`, `release-notes-modal.tsx`, `update-available-dialog.tsx`, `settings/components/update-available-button.tsx` | releases, notes and links from this repo, `yeishin-v` tags |
+| `src/renderer/api/subsonic/subsonic-api.ts`, `subsonic-controller.ts`, `api/jellyfin/jellyfin-api.ts` | client name sent to the server |
+| `src/renderer/features/settings/components/window/discord-settings.tsx`, `advanced/export-import-settings.tsx` | display label, export file name |
+| `src/main/menu.ts`, `src/main/logger.ts`, `src/main/features/core/player/media-keys.ts`, `lyrics/lrclib.ts`, `src/main/features/linux/mpris.ts` | name and links in menus, tray, dialogs, user agent |
+| `src/remote/index.html`, `src/remote/manifest.json`, `src/remote/store/index.ts`, `src/main/features/core/remote/manifest.json`, `web.vite.config.ts` | remote and web app names |
 | `.github/workflows/` | upstream publish/stale workflows removed; `release.yml`, `sync-upstream.yml` added |
 
 Strings are English only for now (no locale file edits, so no Weblate conflicts).
+Upstream strings that say Feishin are rebranded when the locales load.
 
 ## Local dev
 

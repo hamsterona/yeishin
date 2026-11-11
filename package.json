@@ -9,15 +9,14 @@
         "react",
         "electron"
     ],
-    "homepage": "https://github.com/jeffvli/feishin",
+    "homepage": "https://github.com/hamsterona/yeishin",
     "bugs": {
-        "url": "https://github.com/jeffvli/feishin/issues"
+        "url": "https://github.com/hamsterona/yeishin/issues"
     },
     "license": "GPL-3.0",
     "author": {
-        "name": "jeffvli",
-        "email": "feishin@users.noreply.github.com",
-        "url": "https://github.com/jeffvli/"
+        "name": "hamsterona",
+        "url": "https://github.com/hamsterona/"
     },
     "main": "./out/main/index.js",
     "scripts": {

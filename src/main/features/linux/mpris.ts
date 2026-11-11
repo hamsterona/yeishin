@@ -3,14 +3,15 @@ import Player from 'mpris-service';
 
 import { getMainWindow, showMainWindow } from '/@/main/index';
 import log from '/@/main/logger';
+import { APP_NAME } from '/@/shared/constants/brand';
 import { QueueSong } from '/@/shared/types/domain-types';
 import { PlayerRepeat, PlayerStatus } from '/@/shared/types/types';
 
 const mprisPlayer = Player({
-    identity: 'Feishin',
+    identity: APP_NAME,
     maximumRate: 1.0,
     minimumRate: 1.0,
-    name: 'Feishin',
+    name: APP_NAME,
     rate: 1.0,
     supportedInterfaces: ['player'],
     supportedMimeTypes: ['audio/mpeg', 'application/ogg'],

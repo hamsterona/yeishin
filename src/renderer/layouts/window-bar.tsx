@@ -22,6 +22,7 @@ import {
     useWindowSettings,
 } from '/@/renderer/store';
 import { Text } from '/@/shared/components/text/text';
+import { APP_NAME } from '/@/shared/constants/brand';
 import { Platform, PlayerStatus } from '/@/shared/types/types';
 
 const localSettings = isElectron() ? window.api.localSettings : null;
@@ -162,7 +163,7 @@ export const WindowBar = () => {
         const privateModeString = privateMode ? t('page.windowBar.privateMode') : '';
 
         if (!windowBarTrackinfo) {
-            return `Feishin${privateMode ? ` ${privateModeString}` : ''}`;
+            return `${APP_NAME}${privateMode ? ` ${privateModeString}` : ''}`;
         }
 
         // Show radio information if radio is active
@@ -182,7 +183,7 @@ export const WindowBar = () => {
                 }
             }
 
-            return `${radioStatusString}${radioTitle}${radioMetadata} — Feishin${privateMode ? ` ${privateModeString}` : ''}`;
+            return `${radioStatusString}${radioTitle}${radioMetadata} — ${APP_NAME}${privateMode ? ` ${privateModeString}` : ''}`;
         }
 
         // Show regular song information
@@ -190,8 +191,8 @@ export const WindowBar = () => {
         const queueString = queueLength ? `(${index + 1} / ${queueLength}) ` : '';
         const title = `${
             queueLength
-                ? `${statusString}${queueString}${currentSong?.name}${currentSong?.artistName ? ` — ${currentSong?.artistName} — Feishin` : ''}`
-                : 'Feishin'
+                ? `${statusString}${queueString}${currentSong?.name}${currentSong?.artistName ? ` — ${currentSong?.artistName} — ${APP_NAME}` : ''}`
+                : APP_NAME
         }${privateMode ? ` ${privateModeString}` : ''}`;
         return title;
     }, [

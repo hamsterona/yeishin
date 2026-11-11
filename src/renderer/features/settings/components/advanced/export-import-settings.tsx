@@ -9,14 +9,19 @@ import {
 } from '/@/renderer/features/settings/components/settings-section';
 import { useSettingsForExport } from '/@/renderer/store';
 import { Button } from '/@/shared/components/button/button';
+import { APP_REPO_NAME } from '/@/shared/constants/brand';
 
 export const ExportImportSettings = memo(() => {
     const settingForExport = useSettingsForExport();
 
     const onExportSettings = useCallback(() => {
-        const settingsFile = new File([JSON.stringify(settingForExport)], 'feishin-settings.json', {
-            type: 'application/json',
-        });
+        const settingsFile = new File(
+            [JSON.stringify(settingForExport)],
+            `${APP_REPO_NAME}-settings.json`,
+            {
+                type: 'application/json',
+            },
+        );
 
         const settingsFileLink = document.createElement('a');
         const settingsFilesUrl = URL.createObjectURL(settingsFile);

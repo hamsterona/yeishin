@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-export const GITHUB_RELEASES_URL = 'https://api.github.com/repos/jeffvli/feishin/releases';
+import { APP_RELEASE_TAG_PREFIX, APP_REPO_API_URL } from '/@/shared/constants/brand';
+
+export const GITHUB_RELEASES_URL = `${APP_REPO_API_URL}/releases`;
 export const RELEASES_TO_FETCH = 30;
 
 export interface GitHubRelease {
@@ -13,11 +15,13 @@ export interface GitHubRelease {
 }
 
 export function parseVersionFromTag(tagName: string): string {
+    if (tagName.startsWith(APP_RELEASE_TAG_PREFIX))
+        return tagName.slice(APP_RELEASE_TAG_PREFIX.length);
     return tagName.startsWith('v') ? tagName.slice(1) : tagName;
 }
 
 export function toTag(version: string): string {
-    return version.startsWith('v') ? version : `v${version}`;
+    return `${APP_RELEASE_TAG_PREFIX}${parseVersionFromTag(version)}`;
 }
 
 export const useGithubReleasesList = (perPage = RELEASES_TO_FETCH) => {

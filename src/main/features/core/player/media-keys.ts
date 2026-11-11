@@ -3,6 +3,7 @@ import { BrowserWindow, globalShortcut, systemPreferences } from 'electron';
 import { store } from '../settings';
 
 import { isLinux, isMacOS } from '/@/main/env';
+import { APP_NAME } from '/@/shared/constants/brand';
 import { PlayerType } from '/@/shared/types/types';
 
 export const enableMediaKeys = (window: BrowserWindow | null) => {
@@ -17,8 +18,7 @@ export const enableMediaKeys = (window: BrowserWindow | null) => {
 
         if (!trusted && !shownWarning) {
             window?.webContents.send('toast-from-main', {
-                message:
-                    'Feishin is not a trusted accessibility client. Media keys will not work until this setting is changed',
+                message: `${APP_NAME} is not a trusted accessibility client. Media keys will not work until this setting is changed`,
                 type: 'warning',
             });
             store.set('shown_accessibility_warning', true);

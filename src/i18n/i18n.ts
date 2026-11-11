@@ -42,6 +42,8 @@ import uk from './locales/uk.json';
 import zhHans from './locales/zh-Hans.json';
 import zhHant from './locales/zh-Hant.json';
 
+import { rebrandString } from '/@/shared/constants/brand';
+
 const resources = {
     ar: { translation: ar },
     bg: { translation: bg },
@@ -286,6 +288,18 @@ const sentenceCasePostProcessor: PostProcessorModule = {
     },
     type: 'postProcessor',
 };
+// Yeishin: show our name wherever upstream strings say Feishin, without
+// editing the Weblate-managed locale files.
+function rebrandResources<T>(value: T): T {
+    if (typeof value === 'string') return rebrandString(value) as T;
+    if (value && typeof value === 'object') {
+        return Object.fromEntries(
+            Object.entries(value).map(([key, v]) => [key, rebrandResources(v)]),
+        ) as T;
+    }
+    return value;
+}
+
 i18n.use(lowerCasePostProcessor)
     .use(upperCasePostProcessor)
     .use(titleCasePostProcessor)
@@ -299,7 +313,7 @@ i18n.use(lowerCasePostProcessor)
         interpolation: {
             escapeValue: false, // react already safes from xss
         },
-        resources,
+        resources: rebrandResources(resources),
     });
 
 export default i18n;

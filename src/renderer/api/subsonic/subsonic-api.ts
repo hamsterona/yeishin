@@ -11,6 +11,7 @@ import { getServerUrl } from '/@/renderer/utils/normalize-server-url';
 import { ssType } from '/@/shared/api/subsonic/subsonic-types';
 import { hasFeature } from '/@/shared/api/utils';
 import { toast } from '/@/shared/components/toast/toast';
+import { APP_NAME } from '/@/shared/constants/brand';
 import { ServerListItemWithCredential } from '/@/shared/types/domain-types';
 import { ServerFeature } from '/@/shared/types/features-types';
 
@@ -532,7 +533,7 @@ export const ssApiClient = (args: {
                 };
                 request.data = body;
                 request.params = {
-                    c: 'Feishin',
+                    c: APP_NAME,
                     f: 'json',
                     v: '1.13.0',
                     ...authParams,
@@ -544,7 +545,7 @@ export const ssApiClient = (args: {
                 headers['Content-Type'] = 'application/x-www-form-urlencoded';
                 request.method = 'POST';
                 const data = {
-                    c: 'Feishin',
+                    c: APP_NAME,
                     f: 'json',
                     v: '1.13.0',
                     ...authParams,
@@ -553,7 +554,7 @@ export const ssApiClient = (args: {
                 request.data = qs.stringify(data, { arrayFormat: 'repeat' });
             } else {
                 const data = {
-                    c: 'Feishin',
+                    c: APP_NAME,
                     f: 'json',
                     v: '1.13.0',
                     ...authParams,

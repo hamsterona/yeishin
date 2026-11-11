@@ -7,6 +7,7 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { useRemoteLibraryStore } from '/@/remote/store/library';
 import { logger } from '/@/renderer/utils/logger';
 import { toast } from '/@/shared/components/toast/toast';
+import { APP_NAME } from '/@/shared/constants/brand';
 import {
     AckableClientEvent,
     ClientEvent,
@@ -385,7 +386,7 @@ export const useRemoteStore = createWithEqualityFn<SettingsSlice>()(
                                 } else if (reason.code === 4000) {
                                     logger.warn('Server is down');
                                     toast.warn({
-                                        message: 'Feishin remote server is down',
+                                        message: `${APP_NAME} remote server is down`,
                                         title: 'Connection closed',
                                     });
                                 } else if (reason.code === 4004) {

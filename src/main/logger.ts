@@ -8,6 +8,7 @@ import path from 'node:path';
 import util from 'node:util';
 
 import { createZipBuffer } from '/@/main/utils/zip';
+import { APP_REPO_NAME } from '/@/shared/constants/brand';
 import { sanitizeForDiagnostics } from '/@/shared/utils/sanitize-for-diagnostics';
 
 export type { LogLevel };
@@ -100,7 +101,7 @@ const exportDiagnosticsArchive = async (payload: ExportDiagnosticsPayload = {}) 
     const parentWindow = BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0];
     const stamp = new Date().toISOString().slice(0, 10);
     const saveOptions = {
-        defaultPath: `feishin-diagnostics-${stamp}.zip`,
+        defaultPath: `${APP_REPO_NAME}-diagnostics-${stamp}.zip`,
         filters: [{ extensions: ['zip'], name: 'Zip' }],
     };
     const result = parentWindow

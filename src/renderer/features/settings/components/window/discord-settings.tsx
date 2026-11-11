@@ -16,6 +16,7 @@ import {
 import { Select } from '/@/shared/components/select/select';
 import { Switch } from '/@/shared/components/switch/switch';
 import { TextInput } from '/@/shared/components/text-input/text-input';
+import { APP_NAME } from '/@/shared/constants/brand';
 
 export const DiscordSettings = memo(() => {
     const { t } = useTranslation();
@@ -135,7 +136,7 @@ export const DiscordSettings = memo(() => {
                     aria-label={t('setting.discordDisplayType')}
                     clearable={false}
                     data={[
-                        { label: 'Feishin', value: DiscordDisplayType.FEISHIN },
+                        { label: APP_NAME, value: DiscordDisplayType.FEISHIN },
                         {
                             label: t('setting.discordDisplayType', {
                                 context: 'songname',

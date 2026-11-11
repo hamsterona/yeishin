@@ -29,6 +29,7 @@ import {
     sortAlbumList,
     sortSongList,
 } from '/@/shared/api/utils';
+import { APP_NAME } from '/@/shared/constants/brand';
 import {
     AlbumListSort,
     GenreListSort,
@@ -70,7 +71,7 @@ const getSubsonicImageRequest = ({
             `?id=${id}` +
             `&${server.credential}` +
             '&v=1.13.0' +
-            '&c=Feishin' +
+            `&c=${APP_NAME}` +
             (imageSize ? `&size=${imageSize}` : ''),
     };
 };
@@ -254,7 +255,7 @@ function buildGetTranscodeStreamUrl(
     },
 ): string {
     const params = new URLSearchParams({
-        c: 'Feishin',
+        c: APP_NAME,
         mediaId: args.mediaId,
         mediaType: args.mediaType,
         offset: String(args.offset),
@@ -352,7 +353,7 @@ export const SubsonicController: InternalControllerEndpoint = {
 
         const resp = await ssApiClient({ server: null, url: cleanServerUrl }).authenticate({
             query: {
-                c: 'Feishin',
+                c: APP_NAME,
                 f: 'json',
                 username: body.username,
                 v: '1.13.0',
@@ -981,7 +982,7 @@ export const SubsonicController: InternalControllerEndpoint = {
             `?id=${query.id}` +
             `&${apiClientProps.server?.credential}` +
             '&v=1.13.0' +
-            '&c=Feishin'
+            `&c=${APP_NAME}`
         );
     },
     getFavoriteSongs: async (args) => {
@@ -1974,7 +1975,7 @@ export const SubsonicController: InternalControllerEndpoint = {
         const { server } = apiClientProps;
         const { bitrate, format, id, mediaType = 'song', skipAutoTranscode, transcode } = query;
 
-        const streamUrl = `${server?.url}/rest/stream.view?id=${id}&v=1.13.0&c=Feishin&${server?.credential}`;
+        const streamUrl = `${server?.url}/rest/stream.view?id=${id}&v=1.13.0&c=${APP_NAME}&${server?.credential}`;
 
         // If transcoding is explicitly enabled, just return the direct transcoded stream URL
         if (transcode) {
@@ -1999,7 +2000,7 @@ export const SubsonicController: InternalControllerEndpoint = {
                     directPlayProfiles,
                     maxAudioBitrate: 0,
                     maxTranscodingAudioBitrate,
-                    name: 'Feishin',
+                    name: APP_NAME,
                     platform: navigator.userAgent,
                     transcodingProfiles,
                 },

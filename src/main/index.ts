@@ -42,6 +42,7 @@ import {
     DEFAULT_WINDOW_BOUNDS,
     resolveWindowBounds,
 } from '/@/main/utils/window-bounds';
+import { APP_NAME } from '/@/shared/constants/brand';
 import { PlayerRepeat, PlayerStatus, PlayerType, TitleTheme } from '/@/shared/types/types';
 
 const ALPHA_UPDATER_CONFIG: {
@@ -104,27 +105,20 @@ class AppUpdater {
         attachUpdaterMilestoneLogs(updater);
 
         if (isMacOS()) {
-            autoUpdater.autoDownload = false;
-            autoUpdater
-                .checkForUpdates()
-                .then((result) => {
-                    if (result?.isUpdateAvailable) {
-                        log.info('Updater check complete', {
-                            available: true,
-                            version: result.updateInfo.version,
-                        });
-                        getMainWindow()?.webContents.send(
-                            'update-available',
-                            result.updateInfo.version,
-                        );
-                    } else {
-                        log.info('Updater check complete', { available: false });
-                    }
-                })
-                .catch((err) => log.error('Check for updates failed', err));
-        } else {
-            autoUpdater.checkForUpdatesAndNotify();
+            // Yeishin macOS builds share one self-signed identity, so Squirrel.Mac
+            // installs updates in place. If it rejects one (a build signed by another
+            // identity), fall back to the manual download notice.
+            let availableVersion: string | undefined;
+            autoUpdater.on('update-available', (info) => {
+                availableVersion = info.version;
+            });
+            autoUpdater.on('error', () => {
+                if (availableVersion) {
+                    getMainWindow()?.webContents.send('update-available', availableVersion);
+                }
+            });
         }
+        autoUpdater.checkForUpdatesAndNotify();
     }
 }
 
@@ -601,7 +595,7 @@ const createTray = () => {
         });
     }
 
-    tray.setToolTip('Feishin');
+    tray.setToolTip(APP_NAME);
     tray.setContextMenu(contextMenu);
 };
 

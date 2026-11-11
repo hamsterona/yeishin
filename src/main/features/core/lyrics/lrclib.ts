@@ -10,6 +10,7 @@ import {
 import { orderSearchResults } from './shared';
 
 import log from '/@/main/logger';
+import { APP_REPO_URL } from '/@/shared/constants/brand';
 
 const FETCH_URL = 'https://lrclib.net/api/get';
 const SEEARCH_URL = 'https://lrclib.net/api/search';
@@ -100,7 +101,7 @@ export async function query(
     try {
         result = await axios.get<LrcLibTrackResponse>(FETCH_URL, {
             headers: {
-                'User-Agent': 'LRCGET v0.2.0 (https://github.com/jeffvli/feishin)',
+                'User-Agent': `LRCGET v0.2.0 (${APP_REPO_URL})`,
             },
             params: {
                 album_name: params.album,

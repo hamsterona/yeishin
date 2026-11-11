@@ -13,6 +13,7 @@ import { useAuthStore } from '/@/renderer/store';
 import { getServerUrl } from '/@/renderer/utils/normalize-server-url';
 import { jfType } from '/@/shared/api/jellyfin/jellyfin-types';
 import { getClientType } from '/@/shared/api/utils';
+import { APP_NAME } from '/@/shared/constants/brand';
 import { ServerListItemWithCredential } from '/@/shared/types/domain-types';
 
 const c = initContract();
@@ -495,7 +496,7 @@ const parsePath = (fullPath: string) => {
 };
 
 export const createAuthHeader = (): string => {
-    return `MediaBrowser Client="Feishin", Device="${getClientType()}", DeviceId="${
+    return `MediaBrowser Client="${APP_NAME}", Device="${getClientType()}", DeviceId="${
         useAuthStore.getState().deviceId
     }", Version="${packageJson.version}"`;
 };
